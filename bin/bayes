@@ -1,0 +1,159 @@
+#!/usr/bin/env ruby
+$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+
+require 'bayes'
+
+puts "\n" + "*" * 80  + "\n" +
+     " " * 20 + "Detector de Spam" + " " * 20 + "\n" +
+     "*" * 80 + "\n"
+
+
+email = IO.read("spamTrain.label")
+lines = email.split("\n")
+lines.collect! { |l| l.split }
+SPAM_HASH = Hash.new
+lines.each do |line|
+  SPAM_HASH[line[1]] = line[0]
+end
+
+
+
+
+#####################################
+#Lectura de los nombres de los emails
+namesTraining = []
+file_name_training = IO.readlines("nombresTraining.txt")
+file_name_training.each do |linea|
+namesTraining << linea.split
+end
+namesTraining.flatten!
+
+
+namesTest = []
+file_name_test = IO.readlines("nombresTest.txt")
+file_name_test.each do |linea|
+namesTest << linea.split
+end
+namesTest.flatten!
+
+####################################
+
+p "Comienza Fase de Lectura de e-Mails"
+
+
+
+#emails = []
+#spam = []
+#path = 'emails/TRAINING/'
+#namesTraining.each do |name|
+# eml_file = path + name + '.eml'
+# emlfile = Bayes::Email.new(eml_file)
+# email = emlfile.get_hash
+# if (email[:spam]==true)
+# 	spam << (email[:body] + [email[:subject]]).flatten!
+#	else
+#	emails << (email[:body] + [email[:subject]]).flatten!
+# end
+#end
+#
+#p "Cantidad de Emails: #{emails.count}"
+#p "Cantidad de Spam  : #{spam.count}"
+#p "Finaliza Fase de Lectura de e-Mails"
+#p "***********************************"
+#
+#    File.open('MailSpam.txt', 'w') do |f2|
+#     spam.each_index do |i| 
+#		 f2.puts ("#{spam[i]}")
+#		 end
+#		end
+#    File.open('MailNoSpam.txt', 'w') do |f2|
+#     emails.each_index do |i|
+#		 f2.puts ("#{emails[i]}")
+#      end
+#		end
+#
+
+
+
+
+
+
+
+
+
+
+
+
+
+#p "Comienza Fase de Entremamiento" 
+#
+#dataBase = Bayes::BayesTraining.new(emails[0..50],spam[0..50])
+#dataBase.clasification
+#p "Finaliza Fase Entrenamiento"
+#p "***********************************"
+#
+#
+#
+#
+##p "Comienza Fase de Clasificacion" 
+##TETING son todos False
+##contadorErrores = 0
+##emailsT = []
+##path = 'emails/TESTING/'
+##namesTest.each do |name|
+## eml_file = path + name + '.eml'
+## emlfile = Bayes::Email.new(eml_file)
+## email = emlfile.get_hash
+##	emailsT = (email[:body] + [email[:subject]])
+##	clasification = Bayes::BayesSpam.new(emailsT,dataBase)
+##	p "Testeando archivo: #{name}"
+##	p email[:spam]
+##	contadorErrores +=1 if(email[:spam] != clasification.spam)
+##	p contadorErrores
+##end
+##
+##
+##p "El porcentaje de errores es: "
+##p contadorErrores / 4292.0
+##
+##p "Finaliza Fase de Clasificacion"
+##p "***********************************"
+#
+#
+#
+#
+##solitaria
+##emailsT = emails[1000]
+##clasification = Bayes::BayesSpam.new(emailsT,dataBase)
+##p clasification.spam
+##p clasification.value
+##
+##spamT = spam[1000]
+##clasification = Bayes::BayesSpam.new(spamT,dataBase)
+##p clasification.spam
+##p clasification.value
+#
+#
+###prueba con pocos datos
+#
+#p "Comienza Fase de Clasificacion"
+#
+#contadorErrores = 0
+#emailsT = emails[1000...1020]
+#spamT =  spam[1000...1020]
+#
+#emailsT.each_index do |i|
+#clasification = Bayes::BayesSpam.new(emailsT[i],dataBase)
+#contadorErrores+=1 if(clasification.spam == true)
+#end
+#p "***********************************"
+#spamT.each_index do |i|
+#clasification = Bayes::BayesSpam.new(spamT[i],dataBase)
+#contadorErrores+=1 if(clasification.spam == false)
+#end
+#
+#p "El porcentaje de errores es: "
+#p (contadorErrores / 40.0 ) * 100.0 
+#
+#p "Finaliza Fase de Clasificacion"
+#p "***********************************"

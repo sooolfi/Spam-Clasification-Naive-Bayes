@@ -1,0 +1,64 @@
+#!/usr/bin/env ruby
+$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+
+require 'bayes'
+
+puts "\n" + "*" * 80  + "\n" +
+     " " * 20 + "Detector de Spam" + " " * 20 + "\n" +
+     "*" * 80 + "\n"
+
+
+email = IO.read("spamTrain.label")
+lines = email.split("\n")
+lines.collect! { |l| l.split }
+SPAM_HASH = Hash.new
+lines.each do |line|
+  SPAM_HASH[line[1]] = line[0]
+end
+
+p "Comienza Fase de Lectura de e-Mails"
+
+file_path = 'emails/mailsDistMedia.csv'
+
+emails = Bayes::Csv.new(file_path)
+
+p "Finaliza Fase de Lectura de e-Mails"
+p "***********************************"
+
+p "Comienza Fase de Entremamiento" 
+
+#primer entrenamiento con 800 entrenamiento y 200 de prueba 
+
+dataBase = Bayes::BayesTraining.new(emails.email[0..200],emails.spam[0..200])
+dataBase.clasification
+
+p "Finaliza Fase Entrenamiento"
+p "***********************************"
+
+p "Comienza Fase de Clasificacion" 
+
+spamT = emails.spam[400..500]
+emailT = emails.email[400..500]
+contadorErrores=0
+
+spamT.each do |email|
+	clasification = Bayes::BayesSpam.new(email,dataBase)
+	contadorErrores +=1 if(clasification.spam == false)
+end
+
+emailT.each do |email|
+	clasification = Bayes::BayesSpam.new(email,dataBase)
+	contadorErrores +=1 if(clasification.spam == true)
+end
+
+
+p "El porcentaje de errores es: "
+p (contadorErrores / 200.0 ) * 100.0 
+
+
+p "Finaliza Fase de Clasificacion"
+p "***********************************"
+
+
+
+
