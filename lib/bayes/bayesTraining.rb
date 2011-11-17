@@ -56,19 +56,14 @@ module Bayes
 	
 
 	def calculateProbability
-		@emails.each do |email|
-			email.each do |word|
-			 ocurrCant = occurrenceAmount(@emails,word)
-			 changeOccurrence(ocurrCant,@wordsNoSpam,word)
+			@wordsNoSpam.each do |linea|
+			 ocurrCant = occurrenceAmount(@emails,linea[:word])
+			 changeOccurrence(ocurrCant,@wordsNoSpam,linea[:word])
 			end
-		end
-
-		@spam.each do |email|
-			email.each do |word|
-			 ocurrCant = occurrenceAmount(@spam,word)
-			 changeOccurrence(ocurrCant,@wordsSpam,word)
+			@wordsSpam.each do |linea|
+			 ocurrCant = occurrenceAmount(@spam,linea[:word])
+			 changeOccurrence(ocurrCant,@wordsSpam,linea[:word])
 			end
-		end
 	end
 	
 	def occurrenceAmount(emails,word)
@@ -92,8 +87,10 @@ module Bayes
 	def changeProbability
 		size_spam   = (@spam.count).to_f
 		size_emails = (@emails.count).to_f
+
 		@wordsNoSpam.each do |word|
-			occSpam = findOcurrence(word,@wordsSpam)
+			occSpam = findOcurrence(word[:word],@wordsSpam)
+			
 			if (occSpam == 0.0)
 				word[:probability] =(word[:occurrence] /size_emails) /((word[:occurrence] /size_emails) + (0.01 / ((@wordsSpam.count / 10) +1)))
 		  else 
@@ -102,7 +99,7 @@ module Bayes
 		  end
 
 		@wordsSpam.each do |word|
-			occNoSpam = findOcurrence(word,@wordsNoSpam)
+			occNoSpam = findOcurrence(word[:word],@wordsNoSpam)
 			if (occNoSpam == 0.0)
 				word[:probability] =(word[:occurrence] /size_spam) /((word[:occurrence] /size_spam) + (0.01 / ((@wordsNoSpam.count / 10) +1)))
 		  else 
@@ -113,7 +110,7 @@ module Bayes
 
 	def findOcurrence(word,words)
 		words.each do |word1|
-			if(word1 == word)
+			if(word1[:word] == word)
 				return word1[:occurrence]
 			end
 		end

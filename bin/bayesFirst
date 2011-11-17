@@ -29,7 +29,18 @@ p "Comienza Fase de Entremamiento"
 
 #primer entrenamiento con 800 entrenamiento y 200 de prueba 
 
-dataBase = Bayes::BayesTraining.new(emails.email[0..200],emails.spam[0..200])
+#emails
+emailE = emails.email.clone
+
+#spam
+emailSpam = emails.spam.clone
+i = 1
+5.times do
+
+emailE.shuffle!
+emailSpam.shuffle!
+
+dataBase = Bayes::BayesTraining.new(emailE[0..300],emailSpam[0..300])
 dataBase.clasification
 
 p "Finaliza Fase Entrenamiento"
@@ -37,28 +48,34 @@ p "***********************************"
 
 p "Comienza Fase de Clasificacion" 
 
-spamT = emails.spam[400..500]
-emailT = emails.email[400..500]
+emailT = emailE[400..500]
+spamT = emailSpam[400..500]
 contadorErrores=0
+errSpam = 0
+errE = 0
 
 spamT.each do |email|
 	clasification = Bayes::BayesSpam.new(email,dataBase)
 	contadorErrores +=1 if(clasification.spam == false)
+	errSpam +=1 if(clasification.spam == false)
 end
 
 emailT.each do |email|
 	clasification = Bayes::BayesSpam.new(email,dataBase)
 	contadorErrores +=1 if(clasification.spam == true)
+	errE +=1 if(clasification.spam == true) 
 end
 
 
 p "El porcentaje de errores es: "
 p (contadorErrores / 200.0 ) * 100.0 
-
-
+p "iteracion #{i} "
+p "mail"
+p errE
+p "spam"
+p errSpam
 p "Finaliza Fase de Clasificacion"
 p "***********************************"
+i +=1
 
-
-
-
+end

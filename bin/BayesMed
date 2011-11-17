@@ -18,9 +18,9 @@ end
 
 p "Comienza Fase de Lectura de e-Mails"
 
-file_path = 'emails/mails.csv'
-
-emails = Bayes::Csv.new(file_path)
+#file_path = 'emails/mails.csv'
+#
+#emails = Bayes::Csv.new(file_path)
 
 p "Finaliza Fase de Lectura de e-Mails"
 p "***********************************"
@@ -29,34 +29,32 @@ p "Comienza Fase de Entremamiento"
 
 #800 entrenamiento y 200 de prueba 
 
-p emails.email.count
-p emails.spam.count
 
-dataBase = Bayes::BayesTraining.new(emails.email[0..400],emails.spam[0..400])
+emails = [
+['hola','como','andas','todo','bien'],
+['hola','hola', 'como', 'ayer','venian'],
+['hola', 'ayer', 'guiso','guido'],
+['lala', 'junio','julio','agosto']]
+
+spam = [
+['sex','photo','alternativo','sex','webcam'],
+['sex','sex','hola', 'hola', 'como', 'andas'],
+['webcam', 'sex','girl','lala'],
+['sarasa','ayer', 'venian','guido']]
+
+
+dataBase = Bayes::BayesTraining.new(emails,spam)
 dataBase.clasification
+
 
 p "Finaliza Fase Entrenamiento"
 p "***********************************"
 
 p "Comienza Fase de Clasificacion" 
 
-spamT = emails.spam[400..500]
-emailT = emails.email[400..500]
-contadorErrores=0
-
-spamT.each do |email|
-	clasification = Bayes::BayesSpam.new(email,dataBase)
-	contadorErrores +=1 if(clasification.spam == false)
-end
-
-emailT.each do |email|
-	clasification = Bayes::BayesSpam.new(email,dataBase)
-	contadorErrores +=1 if(clasification.spam == true)
-end
 
 
 p "El porcentaje de errores es: "
-p (contadorErrores / 200.0 ) * 100.0 
 
 
 p "Finaliza Fase de Clasificacion"
