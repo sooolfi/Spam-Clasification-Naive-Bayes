@@ -25,15 +25,16 @@ emails = Bayes::Csv.new(file_path)
 p "Finaliza Fase de Lectura de e-Mails"
 p "***********************************"
 
-p "Comienza Fase de Entrenamiento" 
+p "Comienza Fase de Entrenamiento     " 
 
-#primer entrenamiento con 800 entrenamiento y 200 de prueba 
 
 #emails
 emailE = emails.email.clone
 
 #spam
 emailSpam = emails.spam.clone
+
+#validacion cruzada
 i = 1
 5.times do
 
@@ -43,10 +44,10 @@ emailSpam.shuffle!
 dataBase = Bayes::BayesTraining.new(emailE[0..300],emailSpam[0..300])
 dataBase.clasification
 
-p "Finaliza Fase Entrenamiento"
+p "Finaliza Fase Entrenamiento        "
 p "***********************************"
 
-p "Comienza Fase de Clasificacion" 
+p "Comienza Fase de Clasificacion     " 
 
 emailT = emailE[400..500]
 spamT = emailSpam[400..500]
@@ -74,7 +75,7 @@ p "mail"
 p errE
 p "spam"
 p errSpam
-p "Finaliza Fase de Clasificacion"
+p "Finaliza Fase de Clasificacion     "
 p "***********************************"
 i +=1
 

@@ -18,48 +18,64 @@ end
 
 p "Comienza Fase de Lectura de e-Mails"
 
-#file_path = 'emails/mails.csv'
-#
-#emails = Bayes::Csv.new(file_path)
+file_path = 'emails/mails0.csv'
+
+emails = Bayes::Csv.new(file_path)
 
 p "Finaliza Fase de Lectura de e-Mails"
 p "***********************************"
 
-p "Comienza Fase de Entremamiento" 
+p "Comienza Fase de Entrenamiento" 
 
-#800 entrenamiento y 200 de prueba 
+#emails
+emailE = emails.email.clone
 
+#spam
+emailSpam = emails.spam.clone
 
-emails = [
-['hola','como','andas','todo','bien'],
-['hola','hola', 'como', 'ayer','venian'],
-['hola', 'ayer', 'guiso','guido'],
-['lala', 'junio','julio','agosto']]
+#validacion cruzada
+i = 1
+5.times do
 
-spam = [
-['sex','photo','alternativo','sex','webcam'],
-['sex','sex','hola', 'hola', 'como', 'andas'],
-['webcam', 'sex','girl','lala'],
-['sarasa','ayer', 'venian','guido']]
+emailE.shuffle!
+emailSpam.shuffle!
 
-
-dataBase = Bayes::BayesTraining.new(emails,spam)
+dataBase = Bayes::BayesTraining.new(emailE[0..1000],emailSpam[0..1000])
 dataBase.clasification
 
-
-p "Finaliza Fase Entrenamiento"
+p "Finaliza Fase Entrenamiento        "
 p "***********************************"
 
-p "Comienza Fase de Clasificacion" 
+p "Comienza Fase de Clasificacion     " 
 
+emailT = emailE[1000..1200]
+spamT = emailSpam[1000..1200]
+contadorErrores=0
+errSpam = 0
+errE = 0
+
+spamT.each do |email|
+	clasification = Bayes::BayesSpam.new(email,dataBase)
+	contadorErrores +=1 if(clasification.spam == false)
+	errSpam +=1 if(clasification.spam == false)
+end
+
+emailT.each do |email|
+	clasification = Bayes::BayesSpam.new(email,dataBase)
+	contadorErrores +=1 if(clasification.spam == true)
+	errE +=1 if(clasification.spam == true) 
+end
 
 
 p "El porcentaje de errores es: "
-
-
-p "Finaliza Fase de Clasificacion"
+p (contadorErrores / 400.0 ) * 100.0 
+p "iteracion #{i} "
+p "mail"
+p errE
+p "spam"
+p errSpam
+p "Finaliza Fase de Clasificacion     "
 p "***********************************"
+i +=1
 
-
-
-
+end

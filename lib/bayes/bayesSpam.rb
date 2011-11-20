@@ -80,7 +80,7 @@ end
 		@emailU.each {|word| pSpam*=(word[:spamProbability]); pNSpam*=(word[:probability]) }
 		
 		p =  pSpam / (pSpam + pNSpam)
-		 if(p >= 0.8)
+		 if(p >= 0.9)
 	 	 @spam = true
 	 	 else
 	 	 @spam = false
